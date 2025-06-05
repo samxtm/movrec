@@ -10,3 +10,4 @@ A basic static Movie Recommendation System built using only HTML and CSS. This p
 ## Technologies Used
 - HTML
 - CSS (Flexbox/Grid)
+- JAVA SCRIPT
