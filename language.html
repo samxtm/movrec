@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Language-Based Movie Recommender</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1c1c1c;
+      color: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+
+    nav {
+      background-color: #333;
+      padding: 10px 0;
+      margin-bottom: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .language-section {
+      margin-bottom: 30px;
+    }
+
+    .language-section button {
+      margin: 5px;
+      padding: 10px 15px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .language-section button:hover {
+      background-color: #666;
+    }
+
+    .movie-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .movie-card {
+      width: 180px;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #2c2c2c;
+      text-align: center;
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    h1, h3 {
+      color: #f5c518;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <!-- <a href="language.html">Languages</a> -->
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div class="container">
+    <h1>Browse Movies by Language</h1>
+
+    <div class="language-section">
+      <h3>Select a Language</h3>
+      <button onclick="searchByLanguage('Telugu')">Telugu</button>
+      <button onclick="searchByLanguage('Hindi')">Hindi</button>
+      <button onclick="searchByLanguage('English')">English</button>
+    </div>
+
+    <div id="recommendations" class="movie-grid"></div>
+  </div>
+
+  <script>
+    const movieLists = {
+      Telugu: [
+        "RRR", "Pushpa: The Rise", "Baahubali 2: The Conclusion", "Arjun Reddy", "Jersey",
+        "Eega", "Ala Vaikunthapurramuloo", "Sarileru Neekevvaru", "Sye", "Magadheera",
+        "Vedam", "Attarintiki Daredi", "Janatha Garage", "Sarrainodu", "Nannaku Prematho",
+        "Legend", "Fidaa", "Hello", "Geetha Govindam", "Mahanati",
+        "Rangasthalam", "Bharat Ane Nenu", "Dhruva", "Spyder", "Temper",
+        "Gabbar Singh", "Race Gurram", "Seethamma Vakitlo Sirimalle Chettu", "Srimanthudu", "Dookudu",
+        "Athadu", "Pokiri", "Businessman", "Kick", "Jalsa",
+        "Julayi", "Manam", "Ye Maaya Chesave", "100% Love", "Arya",
+        "Arya 2", "Happy Days", "Bommarillu", "Nuvvu Naaku Nachav", "Tholi Prema",
+        "Ninne Pelladata", "Premante Idera", "Anand", "Godavari", "Kshanam",
+        "Goodachari", "Agent Sai Srinivasa Athreya", "Evaru", "Brochevarevarura", "Uppena",
+        "Love Story", "Shyam Singha Roy", "Major", "Sita Ramam", "Bimbisara",
+        "Karthikeya 2", "Dasara", "Virata Parvam", "Ante Sundaraniki", "Oke Oka Jeevitham",
+        "Thimmarusu", "Middle Class Melodies", "Color Photo", "Jathi Ratnalu", "Pelli Choopulu",
+        "Ee Nagaraniki Emaindi", "Chi La Sow", "C/o Kancharapalem", "Mallesham", "Falaknuma Das",
+        "Bro", "Baby", "Hi Nanna", "Das Ka Dhamki", "Balagam",
+        "Virupaksha", "Custody", "Waltair Veerayya", "Veera Simha Reddy", "Bheemla Nayak",
+        "Sarkaru Vaari Paata", "Acharya", "Radhe Shyam", "Liger", "Khiladi",
+        "Bangarraju", "Ghani", "Rowdy Boys", "DJ Tillu", "Son of India",
+        "Sehari", "Aadavallu Meeku Johaarlu", "Stand Up Rahul", "Ashoka Vanamlo Arjuna Kalyanam", "F3: Fun and Frustration"
+      ],
+      Hindi: [
+        "3 Idiots", "Dangal", "PK", "Shershaah", "Gully Boy",
+        "Swades", "Zindagi Na Milegi Dobara", "Bajrangi Bhaijaan", "Queen", "Barfi!",
+        "Lagaan", "Kal Ho Naa Ho", "Taare Zameen Par", "Chak De India", "Andhadhun",
+        "Kahaani", "Tumbbad", "Dil Chahta Hai", "Raazi", "Article 15",
+        "Piku", "Masaan", "The Lunchbox", "Haider", "Black",
+        "Devdas", "Mughal-e-Azam", "Sholay", "Deewaar", "Pakeezah",
+        "Guide", "Anand", "Aradhana", "Amar Akbar Anthony", "Kabhi Kabhie",
+        "Silsila", "Chandni", "Dilwale Dulhania Le Jayenge", "Kuch Kuch Hota Hai", "Kabhi Khushi Kabhie Gham",
+        "Kal Ho Naa Ho", "Veer-Zaara", "My Name is Khan", "Ra.One", "Fan",
+        "Dear Zindagi", "Zero", "Jab Tak Hai Jaan", "Rab Ne Bana Di Jodi", "Om Shanti Om",
+        "Main Hoon Na", "Happy New Year", "Chennai Express", "Dil Se", "Swades",
+        "Lagaan", "Taare Zameen Par", "Ghajini", "Rang De Basanti", "Barfi!",
+        "Rockstar", "Tamasha", "Yeh Jawaani Hai Deewani", "Wake Up Sid", "Ae Dil Hai Mushkil",
+        "Kabir Singh", "Arjun Reddy", "Sandeep Aur Pinky Faraar", "Thappad", "Panga",
+        "Gunjan Saxena", "Chhapaak", "Bala", "Dream Girl", "Article 15",
+        "Badhaai Ho", "Stree", "Andhadhun", "Raazi", "Sanju",
+        "Padmaavat", "Toilet: Ek Prem Katha", "Jolly LLB 2", "Airlift", "Neerja",
+        "Dangal", "Sultan", "Bajrangi Bhaijaan", "PK", "3 Idiots",
+        "Tanu Weds Manu", "Queen", "Piku", "Masaan", "The Lunchbox"
+      ],
+      English: [
+        "Inception", "The Dark Knight", "Interstellar", "Avengers: Endgame", "Titanic",
+        "The Matrix", "Gladiator", "Avatar", "Forrest Gump", "The Shawshank Redemption",
+        "Fight Club", "Iron Man", "Doctor Strange", "Black Panther", "Joker",
+        "The Godfather", "Dune", "Oppenheimer", "Top Gun: Maverick", "The Revenant",
+        "The Wolf of Wall Street", "The Social Network", "Parasite", "La La Land", "Whiplash",
+        "The Prestige", "Memento", "Django Unchained", "Inglourious Basterds", "Once Upon a Time in Hollywood",
+        "The Hateful Eight", "Pulp Fiction", "Reservoir Dogs", "Kill Bill: Vol. 1", "Kill Bill: Vol. 2",
+        "The Grand Budapest Hotel", "Moonrise Kingdom", "The Royal Tenenbaums", "Fantastic Mr. Fox", "Isle of Dogs",
+        "The French Dispatch", "The Irishman", "Marriage Story", "Roma", "The Power of the Dog",
+        "The Trial of the Chicago 7", "Don't Look Up", "The Big Short", "Moneyball", "The Blind Side",
+        "The Imitation Game", "The Theory of Everything", "A Beautiful Mind", "The King's Speech", "Slumdog Millionaire",
+        "127 Hours", "The Martian", "Gravity", "Arrival", "Blade Runner 2049",
+        "Mad Max: Fury Road", "The Revenant", "Birdman", "Spotlight", "The Shape of Water",
+        "Green Book", "Bohemian Rhapsody", "Rocketman", "Elvis", "Walk the Line",
+        "Ray", "Amadeus", "The Pianist", "Schindler's List", "Saving Private Ryan"
+      ]
+    };
+
+    function searchByLanguage(language) {
+      const titles = movieLists[language];
+      const recommendations = document.getElementById("recommendations");
+      recommendations.innerHTML = ""; // Clear previous results
+
+      titles.forEach(title => {
+        fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=7e400332`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.Response === "True" && data.Poster && data.Poster !== "N/A") {
+              const card = document.createElement("div");
+              card.className = "movie-card";
+              card.innerHTML = `
+                <img src="${data.Poster}" alt="${data.Title}">
+                <h3>${data.Title}</h3>
+              `;
+              recommendations.appendChild(card);
+            }
+          });
+      });
+    }
+  </script>
+</body>
+</html>

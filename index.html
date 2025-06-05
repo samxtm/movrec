@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Recommender</title>
+  <link rel="stylesheet" href="style.css">
+</head> 
+<body class="home"> <!-- Added class="home" here -->
+
+  
+    <nav>
+        <!-- <a href="index.html">Home</a> -->
+        <!-- <a href="language.html">Languages</a> -->
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      
+
+  <div class="container">
+    <h1>Movie Recommender</h1>
+
+    <div class="genres">
+      <h3>Browse by Genre</h3>
+      <button onclick="searchByGenre('Action')">Action🗡️</button>
+      <button onclick="searchByGenre('Comedy')">Comedy🤪</button>
+      <button onclick="searchByGenre('Drama')">Drama🎭</button>
+      <button onclick="searchByGenre('Horror')">Horror👻</button>
+      <button onclick="searchByGenre('Romance')">Romance💕</button>
+    
+      <hr> <!-- Optional: visual separator -->
+  
+      <h3>Browse by Language</h3>
+      <button onclick="location.href='language.html'">"Click"🖱️</button>
+    </div>
+
+    <input type="text" id="movieInput" placeholder="Enter movie title">
+    <button onclick="searchMovie()">Search</button>
+
+    <div id="movieDetails"></div>
+    <div id="recommendations"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html> 
